@@ -41,6 +41,8 @@ public class GameViewController extends JPanel {
 		// (here, stacked along the Y axis)
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		this.gameModel = new GameModel();
+		
 		tilePanel = new TilePanel(gameModel);
 		this.add(tilePanel);
 		
