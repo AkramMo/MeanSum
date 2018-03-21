@@ -36,8 +36,14 @@ public class GameViewController extends JPanel {
 		});
 		
 		
-		nextButton.addMouseListener(new MouseAdapter() {
+		
+			nextButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
 			
+				
+			}
 			
 		});
 	}
@@ -50,7 +56,8 @@ public class GameViewController extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		this.gameModel = new GameModel();
-		this.nextButton = new JButton("Next");
+		this.nextButton = new JButton("Suivant");
+		
 		tilePanel = new TilePanel(gameModel);
 		this.add(tilePanel);
 		
