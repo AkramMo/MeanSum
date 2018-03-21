@@ -83,12 +83,12 @@ public class GameModel {
 		return chaineCaractere;
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 
 		GameModel testMethode = new GameModel();
 
 		testMethode.generateGame();
 		System.out.println(testMethode.getDigits());
 	}
-
+*/
 }
