@@ -1,6 +1,7 @@
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -14,7 +15,8 @@ public class GameViewController extends JPanel {
 	 * Instance of the game (logic, state, etc.)
 	 */
 	private GameModel gameModel;
-
+	private JButton nextButton;
+	
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
@@ -32,6 +34,12 @@ public class GameViewController extends JPanel {
 				System.out.println("Mouse pressed on the tile panel");
 			}
 		});
+		
+		
+		nextButton.addMouseListener(new MouseAdapter() {
+			
+			
+		});
 	}
 	
 	public GameViewController() {
@@ -42,7 +50,7 @@ public class GameViewController extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		this.gameModel = new GameModel();
-		
+		this.nextButton = new JButton("Next");
 		tilePanel = new TilePanel(gameModel);
 		this.add(tilePanel);
 		
