@@ -29,9 +29,21 @@ public class GameViewController extends JPanel {
 		
 		// EXAMPLE: A mouse listener with a click event
 		tilePanel.addMouseListener(new MouseAdapter() {
-			@Override
+			/*@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				System.out.println("Mouse pressed on the tile panel");
+				
+			}*/
+			
+			public void mousePressed(MouseEvent e) {
+				
+				System.out.println("PRESS");
+			}
+			
+			public void mouseReleased(MouseEvent e) {
+				
+				System.out.println("RELEASE");
 			}
 		});
 		
@@ -41,7 +53,7 @@ public class GameViewController extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-			
+			gameModel.generateGame();
 				
 			}
 			
@@ -60,7 +72,7 @@ public class GameViewController extends JPanel {
 		
 		tilePanel = new TilePanel(gameModel);
 		this.add(tilePanel);
-		
+		this.add(nextButton);
 		// TODO Initialize all the UI components
 		
 		setupListeners();

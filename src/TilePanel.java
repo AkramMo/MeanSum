@@ -1,5 +1,8 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.util.Random;
+
 import javax.swing.JPanel;
 
 /**
@@ -41,18 +44,38 @@ public class TilePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		// TODO Seek current game information from the model and draw the tiles accordingly
+		char[] allnumbers = gameModelHandle.getDigits().toCharArray();
+		int nbrRectangle = gameModelHandle.getDigits().length();
+		int stringPosition;
+		String nbrString;
 		
+		
+		g.setFont(new Font("Arial", Font.PLAIN, 40));
+		// TODO Seek current game information from the model and draw the tiles accordingly
+
 		// EXAMPLE: Paint a rectangle with the first colour
-		g.setColor(colours[0]);
-		g.fillRect(0, 0, this.getWidth(), 128);
+		for(int i = 0; i < nbrRectangle; i++) {
+			
+			
+		g.setColor(colours[i]);
+		
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 0, this.getWidth()/nbrRectangle, 128, 30, 30);
+		
+		g.setColor(Color.BLACK);
+		
+		nbrString = String.valueOf(allnumbers[i]);
+		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2);
+		
+		g.drawString(nbrString, stringPosition, 64);
+
+		}
 	}
 	
 	public TilePanel(GameModel gameModel) {
 		if (gameModel == null)
 			throw new IllegalArgumentException("Should provide a valid instance of GameModel!");
 		gameModelHandle = gameModel;
-		
+		gameModel.generateGame();
 		// Initialize our array of tile colours
 		initializeColours();
 	}

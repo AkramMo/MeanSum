@@ -49,7 +49,7 @@ public class GameModel {
 	 * selon certaines probabilité stricte aux critères
 	 * du jeux MeanSum.
 	 */
-	private void generateGame() {
+	public void generateGame() {
 
 		int nbRegroupements = getRandom(3,6);
 
@@ -72,7 +72,7 @@ public class GameModel {
 	 * générés concaténés
 	 * @return
 	 */
-	private String getDigits() {
+	public String getDigits() {
 
 		String chaineCaractere = "";
 		for(int a :this.listNumber) {
