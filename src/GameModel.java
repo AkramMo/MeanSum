@@ -12,7 +12,6 @@ public class GameModel {
 
 	// Attribut qui contient la liste des nombres
 	private ArrayList<Integer> listNumber;
-
 	// État de selection pour chaque rectangles
 	private Integer[] etatSelection;
 	// Liste des regroupements créées par selections
@@ -52,42 +51,39 @@ public class GameModel {
 		// retourne un entier
 		return rand.nextInt((max-min) + 1) + min;
 
-
-
 	}
 
 	/**
-	 * Accesseur de l'Attribut getEtatSelection
-	 * @return un tableau d'entier
+	 * Accesseur de l'attribut getEtatSelection
+	 * @return Integer[] tableau d'entier
 	 */
 	public Integer[] getEtatSelection() {
 
 		return etatSelection;
-
 	}
 
 	/**
 	 * Accesseur de la liste des regroupements
-	 * @return tableau d'entier
+	 * @return Integer[] tableau d'entier
 	 */
 	public ArrayList<Integer> getRegroupement(){
 
 		return regroupement;
 	}
-	
+
 	/**
 	 * Accesseur de la liste des nombres a obtenir
 	 * @return Arraylist d'entier
 	 */
 	public ArrayList<Integer> getListNumber() {
-		
+
 		return listNumber;
 	}
 
 	/**
 	 * Méthode qui initialise un tableau à 0 
 	 * pour toute ses cases
-	 * @param arraySelection re^coit un tableau d'entier
+	 * @param Integer[] reçoit un tableau d'entier
 	 */
 	private void initArray(Integer[] arraySelection) {
 
@@ -100,7 +96,9 @@ public class GameModel {
 
 	/**
 	 * Méthode qui génère une nouvelle 
-	 * partie
+	 * partie générant une liste
+	 * de nombre à afficher. Supprime
+	 * partie précédente si existante.
 	 */
 	public void generateGame() {
 
@@ -121,7 +119,7 @@ public class GameModel {
 			}
 		}
 	}
-	
+
 	/**
 	 * Méthode qui réinitialise tout les éléments
 	 * du jeux
@@ -147,13 +145,16 @@ public class GameModel {
 
 	/**
 	 * Fonctions qui retourne une chaine
-	 * de caractï¿½re avec tout les nombres
-	 * gï¿½nï¿½rï¿½s concatï¿½nï¿½s
-	 * @return
+	 * de caractères de tout les générées 
+	 * dans GenerateGame. 
+	 * @return String de tout les chiffres affiché
 	 */
 	public String getDigits() {
 
+		// Variable où sont concaténé les chiffres
 		String allNumbers = "";
+
+		//Loop pour créer le String retour.
 		for(int a :this.listNumber) {
 
 			allNumbers += a;
@@ -162,33 +163,53 @@ public class GameModel {
 		return allNumbers;
 	}
 
+	/**
+	 * Méthode qui vérifie si une sélection
+	 * est valide ou non.
+	 * @param ps1 entier qui défini le rectangle initial
+	 * @param ps2 entier qui défini le rectangle de fin de selection
+	 * @return true ou false selon si la selection est valide ou non
+	 */
 	public boolean selectionValide(int ps1, int ps2) {
 
+		// Instancié à false
 		boolean validation = false;
 
-
+		// Vérifie que la selection se fait ur au maximum 2 rectangles.
 		if(ps1 == (ps2 - 1) || ps1 == (ps2 + 1) || ps1 == ps2) {
 
 			validation = true;
 		}
 
-
 		return validation;
-
 	}
 
+	/**
+	 * Méthode qui permet de changer l'état du rectangle
+	 * sélectionné. 1 à 2 rectangles simultanément.
+	 * @param ps1 entier qui défini rectangle initial
+	 * @param ps2 entier qui défini le rectangle de fin de sélection
+	 */
 	public void changeState(int ps1, int ps2) {
 
+		// Obtient une concaténation de tout les
+		// chiffre affiché.
 		String allNumbers = getDigits();
 
+		//Vérifie que l'état des rectangles à modifié ne l'ont
+		// pas déjà été
 		if(etatSelection[ps1 - 1] == 0 && etatSelection[ps2 - 1] == 0) {
 
+			// Tout dépendemment si c'est 1 rectangles ou 2
+			// les procédures sont différentes.
 			if(ps1 == ps2) {
 
 				etatSelection[ps1 - 1] = 1;
 				regroupement.add(Integer.parseInt(allNumbers.substring(ps1 - 1, ps2)));
 
-
+				// Les procédures suivante permmettent de gérer
+				// si la sélection est fait de droite à gauche
+				// et vice-versa
 			}else if(ps1 == ps2 - 1) {
 
 				etatSelection[ps1 - 1] = 2;
@@ -204,31 +225,48 @@ public class GameModel {
 		}
 	}
 
+	/**
+	 * Fonctions qui retourne la somme 
+	 * des cases sélectionné selon un tableau
+	 * qui retient tout les regroupements créés
+	 * @return entier représentant la somme des regroupements.
+	 */
 	public int getSum(){
 
-		String nbrSum = "";
+		// Somme initialisée à zéro
 		int sum = 0;
-		char[] allNumbers = getDigits().toCharArray();
 
+		// Boucle qui additionne 
+		// toute les valeurs du tableau 
+		// regroupement.
 		for(int a: regroupement) {
 
 			sum += a;
-
 		}
-		return sum;
 
+		return sum;
 	}
-	
+
+	/**
+	 * Fonction qui retourne 
+	 * l'objectif de la partie présente.
+	 * Générer une nouvelle partie retourne
+	 * un nouvelle objectif
+	 * @return entier représentant le nouvelle objectif
+	 */
 	public int getGoal() {
-		
+
+		//Objectif initialisé à zéro
 		int goal = 0;
-		
+
+		//Addition tout les nombres
+		// présent dans le tableau 
 		for(int a: listNumber) {
-			
+
 			goal += a;
 		}
-		
+
 		return goal;
-		
+
 	}
 }

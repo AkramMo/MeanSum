@@ -168,6 +168,10 @@ public class GameViewController extends JPanel {
 		currentSum.setText("Somme : " + gameModel.getSum());
 	}
 	
+	/**
+	 * Méthode qui met à jour l'objectif(JLabel)
+	 * lors d'une nouvelle partie. 
+	 */
 	public void updateGoal() {
 		
 		goal.setText("Objectif : " + gameModel.getGoal());
