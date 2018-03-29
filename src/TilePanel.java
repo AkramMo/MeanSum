@@ -75,23 +75,23 @@ public class TilePanel extends JPanel {
 
 
 	private boolean verifyEndGame(Integer[] etatSelection) {
-		
+
 		boolean endGame = false;
 		int compteur = 0;
-		
+
 		for(int i = 0; i < etatSelection.length; i++) {
-			
+
 			if(etatSelection[i] != 0) {
-				
+
 				compteur++;
 			}
 		}
-		
+
 		if(compteur == gameModelHandle.getDigits().length()) {
-			
+
 			endGame = true;
 		}
-		
+
 		return endGame;
 	}
 	private boolean winOrFail(Integer[] etatSelection, int nbrRectangle, Graphics g,
@@ -99,26 +99,26 @@ public class TilePanel extends JPanel {
 
 		boolean winOrFail = true;
 
-		if(gameModelHandle.getListNumber().toString().length() == gameModelHandle.getRegroupement().toString().length()) {
-			for(int a: gameModelHandle.getListNumber()) {
 
-				if(!gameModelHandle.getRegroupement().contains(a)) {
+		for(int a: gameModelHandle.getListNumber()) {
 
-					winOrFail = false;
-				}
-			}
+			if(!gameModelHandle.getRegroupement().contains(a)) {
 
-			if(winOrFail) {
-
-				drawGreenWin(nbrRectangle, g, stringPosition, nbrString);
-				
-			}else {
-
-				drawRedFail(nbrRectangle, g, stringPosition, nbrString);
-				
+				winOrFail = false;
 			}
 		}
-		
+
+		if(winOrFail) {
+
+			drawGreenWin(nbrRectangle, g, stringPosition, nbrString);
+
+		}else {
+
+			drawRedFail(nbrRectangle, g, stringPosition, nbrString);
+
+		}
+
+
 		return winOrFail;
 
 
@@ -147,7 +147,7 @@ public class TilePanel extends JPanel {
 
 		}
 	}
-	
+
 	private void drawGreenWin(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
 
 		// Boucle pour dessiner les cases nécessaire
