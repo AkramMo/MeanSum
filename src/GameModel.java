@@ -14,14 +14,16 @@ public class GameModel {
 
 	private ArrayList<Integer> listNumber;
 
-	private boolean[] etatSelection;
+	private Integer[] etatSelection;
+	private ArrayList<Integer> regroupement;
 	// TODO Implement constructor and methods (generation of a game, etc.)
 
 	public GameModel() {
 
 		listNumber = new ArrayList<Integer>();
-		etatSelection = new boolean[12];
+		etatSelection = new Integer[12];
 		initArray(etatSelection);
+		regroupement = new ArrayList<Integer>();
 	}
 
 	/**
@@ -48,11 +50,22 @@ public class GameModel {
 
 	}
 
-	private void initArray(boolean[] arraySelection) {
+	public Integer[] getEtatSelection() {
 
-		for(int i = 0; i < getDigits().length(); i++) {
+		return etatSelection;
 
-			arraySelection[i] = false;
+	}
+
+	public ArrayList<Integer> getRegroupement(){
+
+		return regroupement;
+	}
+
+	private void initArray(Integer[] arraySelection) {
+
+		for(int i = 0; i < arraySelection.length; i++) {
+
+			arraySelection[i] = 0;
 		}
 	}
 
@@ -64,7 +77,7 @@ public class GameModel {
 	public void generateGame() {
 
 		int nbRegroupements = getRandom(3,6);
-
+		listNumber.removeAll(listNumber);
 		for(int i = 0; i < nbRegroupements; i++) {
 
 			// Condition des 70%
@@ -86,65 +99,69 @@ public class GameModel {
 	 */
 	public String getDigits() {
 
-		String chaineCaractere = "";
+		String allNumbers = "";
 		for(int a :this.listNumber) {
 
-			chaineCaractere+= a;
+			allNumbers += a;
 		}
 
-		return chaineCaractere;
+		return allNumbers;
 	}
 
 	public boolean selectionValide(int ps1, int ps2) {
 
-		String nbrSelected = "";
-		boolean selValide = false;
+		boolean validation = false;
 
-		if(ps1 <  ps2 && ps1 >= 0 && ps2 < (getDigits().length() - 1)) {
 
-			for(int i = ps1; i < ps2; i++) {
+		if(ps1 == (ps2 - 1) || ps1 == (ps2 + 1) || ps1 == ps2) {
 
-				if(listNumber.get(i) > 9 ) {
-
-					nbrSelected += listNumber.get(i);
-					i++;
-
-				}else {
-
-					nbrSelected += listNumber.get(i);
-				}
-			}
-
-			if(listNumber.contains(Integer.parseInt(nbrSelected))){
-
-				selValide = true;
-			}
-
+			validation = true;
 		}
 
-		return selValide;
+
+		return validation;
 
 	}
 
 	public void changeState(int ps1, int ps2) {
 
-		if(ps1 < ps2 && ps2 < getDigits().length()) {
+		String allNumbers = getDigits();
 
-			for(int i = ps1; i < ps2; i++) {
+		if(selectionValide(ps1, ps2)) {
 
-				etatSelection[i] = true;
+			if(ps1 == ps2) {
+				
+			etatSelection[ps1 - 1] = 1;
+			regroupement.add(Integer.parseInt(allNumbers.substring(ps1 - 1, ps2)));
 
-			}	
+
+			}else if(ps1 == ps2 - 1) {
+
+				etatSelection[ps1 - 1] = 2;
+				etatSelection[ps2 - 1] = 3;
+				regroupement.add(Integer.parseInt(allNumbers.substring(ps1 - 1, ps2)));
+
+			}else {
+				
+				etatSelection[ps1 - 1] = 3;
+				etatSelection[ps2 - 1] = 2;
+				regroupement.add(Integer.parseInt(allNumbers.substring(ps1 , ps1 + 1)));
+			}
 		}
 	}
 
-	public int currentSum(){
+	public int getSum(){
 
 		String nbrSum = "";
 		int sum = 0;
 		char[] allNumbers = getDigits().toCharArray();
 
-		for(int i = 0; i < etatSelection.length; i++) {
+		for(int a: regroupement) {
+
+			sum += a;
+
+		}
+		/*	for(int i = 0; i < etatSelection.length; i++) {
 
 
 			if(etatSelection[i]) {
@@ -159,8 +176,8 @@ public class GameModel {
 				}
 			}
 
-		}
-		
+		}*/
+
 		return sum;
 
 	}
