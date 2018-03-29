@@ -40,6 +40,11 @@ public class GameFrame extends JFrame {
 		setContentPane(gameViewController);
 	}
 	
+	/**
+	 * Main qui lance le thread pour 
+	 * executer notre programme
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override

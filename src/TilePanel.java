@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-
 import javax.swing.JPanel;
 
 /**
@@ -68,25 +67,40 @@ public class TilePanel extends JPanel {
 		// Dessine les cases sélectionnées
 		generateSelection(etatSelection, g, stringPosition, nbrString, nbrRectangle);
 
+		//vérifie si la partie est terminé
 		if(verifyEndGame(etatSelection)) {
+
+			//Vérife si elle est gagnée ou perdu.
 			winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString);
 		}
 	}
 
-
+	/**
+	 * Méthode qui si une partie à atteind
+	 * sa fin.
+	 * @param etatSelection tableau d'entier des états.
+	 * @return true ou false selon si la partie est fini ou pas
+	 */
 	private boolean verifyEndGame(Integer[] etatSelection) {
 
+		// Valeur retour mis à false quand instancié
 		boolean endGame = false;
+		// Compteur permet de vérifié le nbr de
+		// cases sélectionnées.
 		int compteur = 0;
 
+		// Boucle qui traverse le tableau d'état
 		for(int i = 0; i < etatSelection.length; i++) {
 
+			// Si case sélectionné incrément compteur
 			if(etatSelection[i] != 0) {
 
 				compteur++;
 			}
 		}
 
+		// Si le nbr de case sélectionné équivaut aux nbrs de 
+		// rectangles affiché mettre valeur retour à true.
 		if(compteur == gameModelHandle.getDigits().length()) {
 
 			endGame = true;
@@ -94,12 +108,26 @@ public class TilePanel extends JPanel {
 
 		return endGame;
 	}
+
+	/**
+	 * Méthode qui vérife si une partie
+	 * confirmée comme étant terminé est
+	 * gagnée ou perdu
+	 * @param etatSelection tableau des états
+	 * @param nbrRectangle nbr de Rectangles(entier)
+	 * @param g de type Graphics, où sont fait les "dessein"
+	 * @param stringPosition entier qui défini la position des chiffres
+	 * @param nbrString nbr de chiffre à dessiner
+	 * @return
+	 */
 	private boolean winOrFail(Integer[] etatSelection, int nbrRectangle, Graphics g,
 			int stringPosition, String nbrString) {
 
+		// Valeur retour instancié à true
 		boolean winOrFail = true;
 
-
+		// Boucle qui vérife que la liste des regroupements
+		// est bien celle voulu pour gagner la partie.
 		for(int a: gameModelHandle.getListNumber()) {
 
 			if(!gameModelHandle.getRegroupement().contains(a)) {
@@ -108,27 +136,31 @@ public class TilePanel extends JPanel {
 			}
 		}
 
+		// si true, dessine rectangle en vert sinon rouge
+		// pour partie perdu.
 		if(winOrFail) {
 
 			drawGreenWin(nbrRectangle, g, stringPosition, nbrString);
-
 		}else {
 
 			drawRedFail(nbrRectangle, g, stringPosition, nbrString);
-
 		}
 
-
 		return winOrFail;
-
-
 	}
 
+	/**
+	 * Méthode qui dessine tout les rectangles en rouge en gardant les chiffres inscrit 
+	 * et leurs nombres. 
+	 * @param nbrRectangle nbr de rectangle inscrit
+	 * @param g variable de type Graphic où sont dessiner les rectangles
+	 * @param stringPosition postion (int) des chiffres dessinés
+	 * @param nbrString nombre de chiffre à dessiner. Entier.
+	 */
 	private void drawRedFail(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
 
 		// Boucle pour dessiner les cases nécessaire
 		for(int i = 0; i < nbrRectangle; i++) {
-
 
 			// Set la couleurs des rectangle
 			g.setColor(Color.red);
@@ -144,15 +176,21 @@ public class TilePanel extends JPanel {
 
 			// Dessine un chiffre selon la chaine de charactères
 			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-
 		}
 	}
 
+	/**
+	 * Méthode qui dessine tout les rectangles en vert en gardant les chiffres inscrit 
+	 * et leurs nombres. 
+	 * @param nbrRectangle nbr de rectangle inscrit
+	 * @param g variable de type Graphic où sont dessiner les rectangles
+	 * @param stringPosition postion (int) des chiffres dessinés
+	 * @param nbrString nombre de chiffre à dessiner. Entier.
+	 */
 	private void drawGreenWin(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
 
 		// Boucle pour dessiner les cases nécessaire
 		for(int i = 0; i < nbrRectangle; i++) {
-
 
 			// Set la couleurs des rectangle
 			g.setColor(Color.green);
@@ -168,11 +206,17 @@ public class TilePanel extends JPanel {
 
 			// Dessine un chiffre selon la chaine de charactères
 			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-
 		}
-
-
 	}
+
+	/**
+	 * Méthode qui génère les rectangles nécessaire lors 
+	 * d'une nouvelle partie
+	 * @param nbrRectangle entier représent le nbr de case
+	 * @param g variable de type Graphics où sont dessiné les rectangles
+	 * @param stringPosition  
+	 * @param nbrString
+	 */
 	private void generateRectangle(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
 
 		// Boucle pour dessiner les cases nécessaire
@@ -197,6 +241,16 @@ public class TilePanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Méthode qui génère les rectangles lors d'une nouvelle
+	 * sélection. Accorde une couleur associé à leur regroupement
+	 * respectif
+	 * @param etatSelection tableau des états de sélection
+	 * @param g variable de type Graphics qui permet de dessiné sur le Jpanel
+	 * @param stringPosition position des chiffres, un entier
+	 * @param nbrString chaine des chiffres à dessiné
+	 * @param nbrRectangle nombre de rectangle à dessinéer(entier)
+	 */
 	private void generateSelection(Integer[] etatSelection, Graphics g, int stringPosition, 
 			String nbrString, int nbrRectangle) {
 
@@ -217,14 +271,20 @@ public class TilePanel extends JPanel {
 				}else if(etatSelection[i] == 2) {
 
 					drawDoubleSelection(g, nbrRectangle, stringPosition, nbrString, i);
-
 				}
-
 			}
 		}
 	}
 
-
+	/**
+	 * Méthode qui met à jour les rectangles du jeux
+	 * quand il y a la sélection d'une case
+	 * @param g variable type Graphics
+	 * @param nbrRectangle entier représent nbr de rectangles dessiné
+	 * @param stringPosition position int des chiffres
+	 * @param i compteurs int
+	 * @param nbrString string de tout les chiffres
+	 */
 	private void drawSingleSelection(Graphics g, int nbrRectangle, int stringPosition, int i, String nbrString) {
 
 		// Couleurs pour le rectangles et dessine le prochaine rectangles 
@@ -236,17 +296,34 @@ public class TilePanel extends JPanel {
 		g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
 
 	}
-	private void drawDoubleSelection(Graphics g, int nbrRectangle, int stringPosition, String nbrString, int i) {
 
+	/**
+	 * Méthode qui met à jour les rectangles du jeux
+	 * quand il y a une double sélection de case.
+	 * @param g variable de type Graphics
+	 * @param nbrRectangle nombre de rectangles dessiné, int
+	 * @param stringPosition position des chiffre, int
+	 * @param nbrString string de tout les chiffres
+	 * @param i compteur int
+	 */
+	private void drawDoubleSelection(Graphics g, int nbrRectangle,
+			int stringPosition, String nbrString, int i) {
+
+		// Set couleur du regroupement et dessine ceux-ci
 		g.setColor(colours[i]);
-		g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
-		g.fillRoundRect((this.getWidth()/nbrRectangle)*(i + 1), 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, 
+				this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*(i + 1), 5, 
+				this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+
+		// set la couleur de la police, sa position et sa grosseur ds chaque rectangles.
 		g.setColor(Color.black);
 		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
 		g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
 		stringPosition = (this.getWidth()/nbrRectangle)*(i+1)+((this.getWidth()/nbrRectangle)/2) - 12;
 		g.drawString(nbrString.substring(i+1, i+2), stringPosition, 76);
 	}
+
 	/**
 	 * Fonction qui permet d'identifier le numéro
 	 * du rectangles selectionné selon une position
@@ -276,11 +353,9 @@ public class TilePanel extends JPanel {
 
 					caseIdentifiant = compteur;
 					postionVerified = true;
-
 				}else {
 
 					compteur++;
-
 				}
 				// Arrête si une position est trouvé où que le compteur dépasse le nbr de rectangles
 			}while(!postionVerified && compteur <= nbrRectangle );
@@ -301,5 +376,4 @@ public class TilePanel extends JPanel {
 		// Initialize our array of tile colours
 		initializeColours();
 	}
-
 }
