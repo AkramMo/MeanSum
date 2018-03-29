@@ -19,8 +19,13 @@ public class GameViewController extends JPanel {
 
 	// Bouton Next 
 	private JButton nextButton;
+	// Bouton Reset de partie
+	private JButton resetButton;
+	
 	// Label qui montre la somme total.
 	private JLabel currentSum;
+	// Affiche le somme à obtenir
+	private JLabel goal;
 
 	/**
 	 * A single tile panel displays all the tiles of the game
@@ -86,7 +91,7 @@ public class GameViewController extends JPanel {
 		});
 
 
-		// Listener ajouté au boutton next
+		// Listener ajouté au bouton next
 		nextButton.addMouseListener(new MouseAdapter() {
 
 			// Quand le bouton next est cliqué
@@ -95,6 +100,25 @@ public class GameViewController extends JPanel {
 
 				/// génère une nouvelle partie et rafraichie la fenêtre.
 				gameModel.generateGame();
+				showSum();
+				updateGoal();
+				tilePanel.repaint();
+
+			}
+
+		});
+		
+		// Listener ajouté au bouton reset
+		resetButton.addMouseListener(new MouseAdapter() {
+
+			// Quand le bouton suivant est cliqué
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				/// Même partie, mais remet le tout à zéro.
+				gameModel.resetGame();
+				showSum();
+				updateGoal();
 				tilePanel.repaint();
 
 			}
@@ -114,15 +138,19 @@ public class GameViewController extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Intialisation de tout mes attributs
-		this.gameModel = new GameModel();
-		this.nextButton = new JButton("Suivant");
-		this.currentSum = new JLabel("Somme : 0");
-		this.tilePanel = new TilePanel(gameModel);
+		gameModel = new GameModel();
+		resetButton = new JButton("Réinitialiser");
+		nextButton = new JButton("Suivant");
+		currentSum = new JLabel("Somme : 0");	
+		tilePanel = new TilePanel(gameModel);
+		goal = new JLabel("Objectif : " + gameModel.getGoal());
 
 		// Ajoutes toute composantes au JPanel
 		this.add(tilePanel);
+		this.add(goal);
 		this.add(currentSum);
 		this.add(nextButton);
+		this.add(resetButton);
 		// TODO Initialize all the UI components
 
 		// Intialise tout mes listeners 
@@ -139,6 +167,14 @@ public class GameViewController extends JPanel {
 		// Modification du component.
 		currentSum.setText("Somme : " + gameModel.getSum());
 	}
+	
+	public void updateGoal() {
+		
+		goal.setText("Objectif : " + gameModel.getGoal());
+		
+	}
+	
+
 
 
 }
