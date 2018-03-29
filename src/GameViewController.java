@@ -116,7 +116,7 @@ public class GameViewController extends JPanel {
 		// Intialisation de tout mes attributs
 		this.gameModel = new GameModel();
 		this.nextButton = new JButton("Suivant");
-		this.currentSum = new JLabel("Somme :");
+		this.currentSum = new JLabel("Somme : 0");
 		this.tilePanel = new TilePanel(gameModel);
 
 		// Ajoutes toute composantes au JPanel
@@ -137,7 +137,7 @@ public class GameViewController extends JPanel {
 	public void showSum() {
 
 		// Modification du component.
-		currentSum.setText("Sommes :" + gameModel.getSum());
+		currentSum.setText("Somme : " + gameModel.getSum());
 	}
 
 
