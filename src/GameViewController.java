@@ -21,10 +21,10 @@ public class GameViewController extends JPanel {
 	private JButton nextButton;
 	// Bouton Reset de partie
 	private JButton resetButton;
-	
-	// Label qui montre la somme total.
+
+	// Label qui affiche la somme total.
 	private JLabel currentSum;
-	// Affiche le somme à obtenir
+	// Affiche la somme à obtenir
 	private JLabel goal;
 
 	/**
@@ -32,11 +32,8 @@ public class GameViewController extends JPanel {
 	 */
 	private TilePanel tilePanel;
 
-	// TODO Add all the other required UI components (labels, buttons, etc.)
-
 	//  Méthode qui gère tout les listeners
 	private void setupListeners() {		
-		// TODO Set up the required listeners on the UI components (button clicks, etc.)
 
 		// Ajout de listener au rectangle supérieur de la fenêtre
 		tilePanel.addMouseListener(new MouseAdapter() {
@@ -107,7 +104,7 @@ public class GameViewController extends JPanel {
 			}
 
 		});
-		
+
 		// Listener ajouté au bouton reset
 		resetButton.addMouseListener(new MouseAdapter() {
 
@@ -127,11 +124,12 @@ public class GameViewController extends JPanel {
 	}
 
 	/**
-	 * Constructeur qui instancie mes variable et 
-	 * ajoute les composantes à mon JPanel
+	 * Constructeur qui instancie mes variables et 
+	 * ajoute les composantes à mon JPanel. 
+	 * Il ajoute aussi des listeners aux
+	 * composantes qui en ont besoin.
 	 */
 	public GameViewController() {
-		// TODO Initialize our game model by constructing an instance
 
 		// The layout defines how components are displayed
 		// (here, stacked along the Y axis)
@@ -151,7 +149,6 @@ public class GameViewController extends JPanel {
 		this.add(currentSum);
 		this.add(nextButton);
 		this.add(resetButton);
-		// TODO Initialize all the UI components
 
 		// Intialise tout mes listeners 
 		setupListeners();
@@ -167,17 +164,17 @@ public class GameViewController extends JPanel {
 		// Modification du component.
 		currentSum.setText("Somme : " + gameModel.getSum());
 	}
-	
+
 	/**
 	 * Méthode qui met à jour l'objectif(JLabel)
 	 * lors d'une nouvelle partie. 
 	 */
 	public void updateGoal() {
-		
+
 		goal.setText("Objectif : " + gameModel.getGoal());
-		
+
 	}
-	
+
 
 
 
