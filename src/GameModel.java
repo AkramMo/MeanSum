@@ -74,6 +74,15 @@ public class GameModel {
 
 		return regroupement;
 	}
+	
+	/**
+	 * Accesseur de la liste des nombres a obtenir
+	 * @return Arraylist d'entier
+	 */
+	public ArrayList<Integer> getListNumber() {
+		
+		return listNumber;
+	}
 
 	/**
 	 * Méthode qui initialise un tableau à 0 
@@ -172,7 +181,7 @@ public class GameModel {
 
 		String allNumbers = getDigits();
 
-		if(selectionValide(ps1, ps2)) {
+		if(etatSelection[ps1 - 1] == 0 && etatSelection[ps2 - 1] == 0) {
 
 			if(ps1 == ps2) {
 

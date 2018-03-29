@@ -53,19 +53,132 @@ public class TilePanel extends JPanel {
 		// Nombre de rectangles a afficher
 		int nbrRectangle = gameModelHandle.getDigits().length();
 		// Positions des chiffres sur les rectangles
-		int stringPosition;
+		int stringPosition = 0;
 		// Chaine de charactère de tout les chiffres
 		String nbrString = gameModelHandle.getDigits();
 		// tableau de L'etat de selection de chaque rectangles
 		Integer[] etatSelection = gameModelHandle.getEtatSelection();
-		
+
 		// Attribut une police aux textes 
 		g.setFont(new Font("Arial", Font.PLAIN, 40));
+
+		// Dessine les rectangles sur le paintComponent
+		generateRectangle(nbrRectangle, g, stringPosition, nbrString);
+
+		// Dessine les cases sélectionnées
+		generateSelection(etatSelection, g, stringPosition, nbrString, nbrRectangle);
+
+		if(verifyEndGame(etatSelection)) {
+			winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString);
+		}
+	}
+
+
+	private boolean verifyEndGame(Integer[] etatSelection) {
 		
+		boolean endGame = false;
+		int compteur = 0;
+		
+		for(int i = 0; i < etatSelection.length; i++) {
+			
+			if(etatSelection[i] != 0) {
+				
+				compteur++;
+			}
+		}
+		
+		if(compteur == gameModelHandle.getDigits().length()) {
+			
+			endGame = true;
+		}
+		
+		return endGame;
+	}
+	private boolean winOrFail(Integer[] etatSelection, int nbrRectangle, Graphics g,
+			int stringPosition, String nbrString) {
+
+		boolean winOrFail = true;
+
+		if(gameModelHandle.getListNumber().toString().length() == gameModelHandle.getRegroupement().toString().length()) {
+			for(int a: gameModelHandle.getListNumber()) {
+
+				if(!gameModelHandle.getRegroupement().contains(a)) {
+
+					winOrFail = false;
+				}
+			}
+
+			if(winOrFail) {
+
+				drawGreenWin(nbrRectangle, g, stringPosition, nbrString);
+				
+			}else {
+
+				drawRedFail(nbrRectangle, g, stringPosition, nbrString);
+				
+			}
+		}
+		
+		return winOrFail;
+
+
+	}
+
+	private void drawRedFail(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
+
 		// Boucle pour dessiner les cases nécessaire
 		for(int i = 0; i < nbrRectangle; i++) {
 
-			
+
+			// Set la couleurs des rectangle
+			g.setColor(Color.red);
+
+			// dessines un rectangle arrondie
+			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+
+			// Couleur du prochain desseins
+			g.setColor(Color.BLACK);
+
+			// position du texte
+			stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
+
+			// Dessine un chiffre selon la chaine de charactères
+			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
+
+		}
+	}
+	
+	private void drawGreenWin(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
+
+		// Boucle pour dessiner les cases nécessaire
+		for(int i = 0; i < nbrRectangle; i++) {
+
+
+			// Set la couleurs des rectangle
+			g.setColor(Color.green);
+
+			// dessines un rectangle arrondie
+			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+
+			// Couleur du prochain desseins
+			g.setColor(Color.BLACK);
+
+			// position du texte
+			stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
+
+			// Dessine un chiffre selon la chaine de charactères
+			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
+
+		}
+
+
+	}
+	private void generateRectangle(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
+
+		// Boucle pour dessiner les cases nécessaire
+		for(int i = 0; i < nbrRectangle; i++) {
+
+
 			// Set la couleurs des rectangle
 			g.setColor(Color.white);
 
@@ -77,52 +190,63 @@ public class TilePanel extends JPanel {
 
 			// position du texte
 			stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
-			
+
 			// Dessine un chiffre selon la chaine de charactères
 			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
 
 		}
-		
+	}
+
+	private void generateSelection(Integer[] etatSelection, Graphics g, int stringPosition, 
+			String nbrString, int nbrRectangle) {
+
 		// Vérifie si il y a des regroupements déjà existant
 		if(!gameModelHandle.getRegroupement().isEmpty()) {
-			
+
 			// Boucle pour modifier la couleurs de tout les regroupements
 			for(int i = 0; i < etatSelection.length; i++) {
-				
+
 				// Selon l'état , les rectangles changes de couleurs
 				if(etatSelection[i] == 1) {
-					
-					// Couleurs pour le rectangles et dessine le prochaine rectangles 
-					// et son chiffre
-					g.setColor(colours[i]);
-					g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
-					g.setColor(Color.black);
-					stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
-					g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-					
+
+
+					drawSingleSelection(g, nbrRectangle, stringPosition, i, nbrString);
+
 					// Équivalent que plus haut, mais pour un état où il y a 
 					// 2 rectangles sélectionné
 				}else if(etatSelection[i] == 2) {
-					
-					g.setColor(colours[i]);
-					
-					g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
-					g.fillRoundRect((this.getWidth()/nbrRectangle)*(i + 1), 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
-					
-					g.setColor(Color.black);
-					stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
-					g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-					stringPosition = (this.getWidth()/nbrRectangle)*(i+1)+((this.getWidth()/nbrRectangle)/2) - 12;
-					g.drawString(nbrString.substring(i+1, i+2), stringPosition, 76);
 
-					
+					drawDoubleSelection(g, nbrRectangle, stringPosition, nbrString, i);
+
 				}
-				
+
 			}
 		}
 	}
 
 
+	private void drawSingleSelection(Graphics g, int nbrRectangle, int stringPosition, int i, String nbrString) {
+
+		// Couleurs pour le rectangles et dessine le prochaine rectangles 
+		// et son chiffre
+		g.setColor(colours[i]);
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+		g.setColor(Color.black);
+		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
+		g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
+
+	}
+	private void drawDoubleSelection(Graphics g, int nbrRectangle, int stringPosition, String nbrString, int i) {
+
+		g.setColor(colours[i]);
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+		g.fillRoundRect((this.getWidth()/nbrRectangle)*(i + 1), 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+		g.setColor(Color.black);
+		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
+		g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
+		stringPosition = (this.getWidth()/nbrRectangle)*(i+1)+((this.getWidth()/nbrRectangle)/2) - 12;
+		g.drawString(nbrString.substring(i+1, i+2), stringPosition, 76);
+	}
 	/**
 	 * Fonction qui permet d'identifier le numéro
 	 * du rectangles selectionné selon une position
@@ -144,24 +268,24 @@ public class TilePanel extends JPanel {
 
 		// Vérifie que la position en y est la bonne
 		if(y <= 128 && y >= 5) {
-			
+
 			// Boucle qui vérifie que la position (x,y) se trouve bien au sein d'un rectangles
 			do {
-				
+
 				if( x < (sizeRectangle*compteur - 10) && x > (sizeRectangle*(compteur - 1))){
-					
+
 					caseIdentifiant = compteur;
 					postionVerified = true;
-					
+
 				}else {
-					
+
 					compteur++;
-					
+
 				}
 				// Arrête si une position est trouvé où que le compteur dépasse le nbr de rectangles
 			}while(!postionVerified && compteur <= nbrRectangle );
 		}
-		
+
 		return caseIdentifiant;
 	}
 
