@@ -2,6 +2,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -16,7 +17,7 @@ public class GameViewController extends JPanel {
 	 */
 	private GameModel gameModel;
 	private JButton nextButton;
-	
+	private JLabel currentSum;
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
@@ -54,6 +55,7 @@ public class GameViewController extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				
 			gameModel.generateGame();
+			tilePanel.repaint();
 				
 			}
 			
@@ -69,9 +71,11 @@ public class GameViewController extends JPanel {
 		
 		this.gameModel = new GameModel();
 		this.nextButton = new JButton("Suivant");
+		this.currentSum = new JLabel("Somme");
 		
 		tilePanel = new TilePanel(gameModel);
 		this.add(tilePanel);
+		this.add(currentSum);
 		this.add(nextButton);
 		// TODO Initialize all the UI components
 		

@@ -43,10 +43,9 @@ public class TilePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		char[] allnumbers = gameModelHandle.getDigits().toCharArray();
 		int nbrRectangle = gameModelHandle.getDigits().length();
 		int stringPosition;
-		String nbrString;
+		String nbrString = gameModelHandle.getDigits();
 		
 		
 		g.setFont(new Font("Arial", Font.PLAIN, 40));
@@ -62,10 +61,10 @@ public class TilePanel extends JPanel {
 		
 		g.setColor(Color.BLACK);
 		
-		nbrString = String.valueOf(allnumbers[i]);
-		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2);
 		
-		g.drawString(nbrString, stringPosition, 64);
+		stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
+		
+		g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
 
 		}
 	}
