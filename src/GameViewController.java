@@ -16,70 +16,129 @@ public class GameViewController extends JPanel {
 	 * Instance of the game (logic, state, etc.)
 	 */
 	private GameModel gameModel;
+
+	// Bouton Next 
 	private JButton nextButton;
+	// Label qui montre la somme total.
 	private JLabel currentSum;
+
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
 	private TilePanel tilePanel;
-	
+
 	// TODO Add all the other required UI components (labels, buttons, etc.)
-	
+
+	//  Méthode qui gère tout les listeners
 	private void setupListeners() {		
 		// TODO Set up the required listeners on the UI components (button clicks, etc.)
-		
-		// EXAMPLE: A mouse listener with a click event
+
+		// Ajout de listener au rectangle supérieur de la fenêtre
 		tilePanel.addMouseListener(new MouseAdapter() {
-			/*@Override
-			public void mouseClicked(MouseEvent e) {
-				
-				System.out.println("Mouse pressed on the tile panel");
-				
-			}*/
-			
+
+			// Variable représentant les rectangles sélectionnés
+			int ps1;
+			int ps2;
+
+
+			// Méthode qui est appelé quand il y a un clique de la souris.
 			public void mousePressed(MouseEvent e) {
-				
-				System.out.println("PRESS");
+
+				// Identifie quel rectangle a été sélectionné quand la souris est pressée
+				int identifiantRectangle = tilePanel.getRectanglePosition(e.getX(), e.getY());
+
+				// Si le rectangle existe il attribut la valeur à la variable ps1 
+				if(identifiantRectangle != -1) {
+
+					ps1 = identifiantRectangle;
+
+				}
+
 			}
-			
+
+			// Méthode appelé quand la souris est libérée
 			public void mouseReleased(MouseEvent e) {
-				
-				System.out.println("RELEASE");
+
+				// Identifie quel est le rectangles où la souris a été libéré
+				int identifiantRectangle = tilePanel.getRectanglePosition(e.getX(), e.getY());
+
+				// vérifie si le rectangles existes
+				if(identifiantRectangle != -1) {
+
+					// attributs la position à la variable ps2
+					ps2 = identifiantRectangle;
+
+					// vérifie que la selection est valides
+					if(gameModel.selectionValide(ps1, ps2)){
+
+						// change l'état de mes cases
+						gameModel.changeState(ps1, ps2);
+
+						// Met à jour la somme affiché 
+						showSum();
+
+						//rafraichie la fenêtre
+						tilePanel.repaint();
+					}
+
+				}
 			}
 		});
-		
-		
-		
-			nextButton.addMouseListener(new MouseAdapter() {
+
+
+		// Listener ajouté au boutton next
+		nextButton.addMouseListener(new MouseAdapter() {
+
+			// Quand le bouton next est cliqué
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-			gameModel.generateGame();
-			tilePanel.repaint();
-				
+
+				/// génère une nouvelle partie et rafraichie la fenêtre.
+				gameModel.generateGame();
+				tilePanel.repaint();
+
 			}
-			
+
 		});
 	}
-	
+
+	/**
+	 * Constructeur qui instancie mes variable et 
+	 * ajoute les composantes à mon JPanel
+	 */
 	public GameViewController() {
 		// TODO Initialize our game model by constructing an instance
-		
+
 		// The layout defines how components are displayed
 		// (here, stacked along the Y axis)
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
+		// Intialisation de tout mes attributs
 		this.gameModel = new GameModel();
 		this.nextButton = new JButton("Suivant");
-		this.currentSum = new JLabel("Somme");
-		
-		tilePanel = new TilePanel(gameModel);
+		this.currentSum = new JLabel("Somme :");
+		this.tilePanel = new TilePanel(gameModel);
+
+		// Ajoutes toute composantes au JPanel
 		this.add(tilePanel);
 		this.add(currentSum);
 		this.add(nextButton);
 		// TODO Initialize all the UI components
-		
+
+		// Intialise tout mes listeners 
 		setupListeners();
 	}
-	
+
+	/**
+	 * Méthode qui modifie le component currentSum
+	 * pour ajouté la nouvelle somme lors de nouvelle
+	 * sélection de chiffres. 
+	 */
+	public void showSum() {
+
+		// Modification du component.
+		currentSum.setText("Sommes :" + gameModel.getSum());
+	}
+
+
 }
