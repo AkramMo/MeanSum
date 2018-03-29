@@ -39,49 +39,69 @@ public class TilePanel extends JPanel {
 			colours[i] = Color.decode(tileColourCodes[i]);
 	}
 
+	/**
+	 * Méthode qui permet dessiner/peindre sur 
+	 * sont JFrame
+	 * @param g encapsule tout les "desseins"
+	 * avant de le rendu.
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
+		// Méthodes qui initialise le paintcomponent du JPanel
 		super.paintComponent(g);
 
+		// Nombre de rectangles a afficher
 		int nbrRectangle = gameModelHandle.getDigits().length();
+		// Positions des chiffres sur les rectangles
 		int stringPosition;
+		// Chaine de charactère de tout les chiffres
 		String nbrString = gameModelHandle.getDigits();
+		// tableau de L'etat de selection de chaque rectangles
 		Integer[] etatSelection = gameModelHandle.getEtatSelection();
 		
-
-
+		// Attribut une police aux textes 
 		g.setFont(new Font("Arial", Font.PLAIN, 40));
-		// TODO Seek current game information from the model and draw the tiles accordingly
-
-		// EXAMPLE: Paint a rectangle with the first colour
+		
+		// Boucle pour dessiner les cases nécessaire
 		for(int i = 0; i < nbrRectangle; i++) {
 
-
+			
+			// Set la couleurs des rectangle
 			g.setColor(Color.white);
 
+			// dessines un rectangle arrondie
 			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
 
+			// Couleur du prochain desseins
 			g.setColor(Color.BLACK);
 
-
+			// position du texte
 			stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
-
+			
+			// Dessine un chiffre selon la chaine de charactères
 			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
 
 		}
 		
+		// Vérifie si il y a des regroupements déjà existant
 		if(!gameModelHandle.getRegroupement().isEmpty()) {
 			
+			// Boucle pour modifier la couleurs de tout les regroupements
 			for(int i = 0; i < etatSelection.length; i++) {
 				
+				// Selon l'état , les rectangles changes de couleurs
 				if(etatSelection[i] == 1) {
 					
+					// Couleurs pour le rectangles et dessine le prochaine rectangles 
+					// et son chiffre
 					g.setColor(colours[i]);
 					g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
 					g.setColor(Color.black);
 					stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
 					g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-
+					
+					// Équivalent que plus haut, mais pour un état où il y a 
+					// 2 rectangles sélectionné
 				}else if(etatSelection[i] == 2) {
 					
 					g.setColor(colours[i]);
@@ -103,18 +123,31 @@ public class TilePanel extends JPanel {
 	}
 
 
+	/**
+	 * Fonction qui permet d'identifier le numéro
+	 * du rectangles selectionné selon une position
+	 * @param x position de la souris en x ( int )
+	 * @param y position de la souris en y ( int )
+	 * @return retourne numéro du rectangle ou -1 si rien trouvé 
+	 */
 	public int getRectanglePosition(int x, int y) {
 
+		// Nombre de rectangles présent, leurs tailles
 		int nbrRectangle = gameModelHandle.getDigits().length();
 		int sizeRectangle = this.getWidth()/nbrRectangle;
+		// Variable pour arrêter la boucle 
 		boolean postionVerified = false;
+		// compteur du nombre de rectangles
 		int compteur = 1;
+		// Numéro de la case identifiée
 		int caseIdentifiant = -1;
 
+		// Vérifie que la position en y est la bonne
 		if(y <= 128 && y >= 5) {
 			
+			// Boucle qui vérifie que la position (x,y) se trouve bien au sein d'un rectangles
 			do {
-
+				
 				if( x < (sizeRectangle*compteur - 10) && x > (sizeRectangle*(compteur - 1))){
 					
 					caseIdentifiant = compteur;
@@ -125,13 +158,17 @@ public class TilePanel extends JPanel {
 					compteur++;
 					
 				}
-
+				// Arrête si une position est trouvé où que le compteur dépasse le nbr de rectangles
 			}while(!postionVerified && compteur <= nbrRectangle );
 		}
 		
 		return caseIdentifiant;
 	}
 
+	/**
+	 * Constructeur du panel
+	 * @param gameModel model et condition du jeux
+	 */
 	public TilePanel(GameModel gameModel) {
 		if (gameModel == null)
 			throw new IllegalArgumentException("Should provide a valid instance of GameModel!");
