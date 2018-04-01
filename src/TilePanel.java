@@ -125,6 +125,8 @@ public class TilePanel extends JPanel {
 
 		// Valeur retour instancié à true
 		boolean winOrFail = true;
+		Color green = Color.GREEN;
+		Color red = Color.RED;
 
 		// Boucle qui vérife que la liste des regroupements
 		// est bien celle voulu pour gagner la partie.
@@ -140,63 +142,38 @@ public class TilePanel extends JPanel {
 		// pour partie perdu.
 		if(winOrFail) {
 
-			drawGreenWin(nbrRectangle, g, stringPosition, nbrString);
+			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, green);
 		}else {
 
-			drawRedFail(nbrRectangle, g, stringPosition, nbrString);
+			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, red);
 		}
 
 		return winOrFail;
 	}
 
+
 	/**
-	 * Méthode qui dessine tout les rectangles en rouge en gardant les chiffres inscrit 
+	 * Méthode qui dessine tout les rectangles selon la couleur
+	 * rentré en paramètre en gardant les chiffres inscrit 
 	 * et leurs nombres. 
 	 * @param nbrRectangle nbr de rectangle inscrit
 	 * @param g variable de type Graphic où sont dessiner les rectangles
 	 * @param stringPosition postion (int) des chiffres dessinés
 	 * @param nbrString nombre de chiffre à dessiner. Entier.
+	 * @param color couleur des rectangles dessinés
 	 */
-	private void drawRedFail(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
+	private void drawColorOnRectangle(int nbrRectangle, Graphics g,
+			int stringPosition, String nbrString, Color color) {
 
 		// Boucle pour dessiner les cases nécessaire
 		for(int i = 0; i < nbrRectangle; i++) {
 
 			// Set la couleurs des rectangle
-			g.setColor(Color.red);
+			g.setColor(color);
 
 			// dessines un rectangle arrondie
-			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
-
-			// Couleur du prochain desseins
-			g.setColor(Color.BLACK);
-
-			// position du texte
-			stringPosition = (this.getWidth()/nbrRectangle)*i+((this.getWidth()/nbrRectangle)/2) - 12;
-
-			// Dessine un chiffre selon la chaine de charactères
-			g.drawString(nbrString.substring(i, i+1), stringPosition, 76);
-		}
-	}
-
-	/**
-	 * Méthode qui dessine tout les rectangles en vert en gardant les chiffres inscrit 
-	 * et leurs nombres. 
-	 * @param nbrRectangle nbr de rectangle inscrit
-	 * @param g variable de type Graphic où sont dessiner les rectangles
-	 * @param stringPosition postion (int) des chiffres dessinés
-	 * @param nbrString nombre de chiffre à dessiner. Entier.
-	 */
-	private void drawGreenWin(int nbrRectangle, Graphics g, int stringPosition, String nbrString) {
-
-		// Boucle pour dessiner les cases nécessaire
-		for(int i = 0; i < nbrRectangle; i++) {
-
-			// Set la couleurs des rectangle
-			g.setColor(Color.green);
-
-			// dessines un rectangle arrondie
-			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, this.getWidth()/nbrRectangle - 10, 128, 30, 30);
+			g.fillRoundRect((this.getWidth()/nbrRectangle)*i, 5, 
+					this.getWidth()/nbrRectangle - 10, 128, 30, 30);
 
 			// Couleur du prochain desseins
 			g.setColor(Color.BLACK);
