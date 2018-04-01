@@ -101,11 +101,11 @@ public class GameModel {
 	 * partie précédente si existante.
 	 */
 	public void generateGame() {
-
+ 
 		// Nombre aléatoire de regroupement à avoir
 		int nbRegroupements = getRandom(3,6);
 		// Réinitialise les composantes du jeux
-		resetNext();
+		suppressionPartie();
 
 		for(int i = 0; i < nbRegroupements; i++) {
 
@@ -118,13 +118,16 @@ public class GameModel {
 				this.listNumber.add(getRandom(10,99));
 			}
 		}
+		
+		System.out.println(getDigits());
 	}
 
 	/**
 	 * Méthode qui réinitialise tout les éléments
-	 * du jeux
+	 * du jeu et supprime la partie en cours 
+	 * définitivement
 	 */
-	public void resetNext() {
+	public void suppressionPartie() {
 
 		// Réinitialise tout les attributs du jeux
 		listNumber.removeAll(listNumber);
@@ -134,9 +137,9 @@ public class GameModel {
 
 	/**
 	 * Méthode qui réinitialise tout les éléments
-	 * du jeux en gardant la même partie
+	 * du jeu en gardant la même partie
 	 */
-	public void resetGame() {
+	public void reinitialisationPartie() {
 
 		// Réinitialise tout les attributs du jeux
 		initArray(etatSelection);

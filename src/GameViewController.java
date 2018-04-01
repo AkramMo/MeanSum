@@ -113,7 +113,7 @@ public class GameViewController extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 
 				/// Même partie, mais remet le tout à zéro.
-				gameModel.resetGame();
+				gameModel.reinitialisationPartie();
 				showSum();
 				updateGoal();
 				tilePanel.repaint();
@@ -159,7 +159,7 @@ public class GameViewController extends JPanel {
 	 * pour ajouté la nouvelle somme lors de nouvelle
 	 * sélection de chiffres. 
 	 */
-	public void showSum() {
+	private void showSum() {
 
 		// Modification du component.
 		currentSum.setText("Somme : " + gameModel.getSum());
@@ -169,7 +169,7 @@ public class GameViewController extends JPanel {
 	 * Méthode qui met à jour l'objectif(JLabel)
 	 * lors d'une nouvelle partie. 
 	 */
-	public void updateGoal() {
+	private void updateGoal() {
 
 		goal.setText("Objectif : " + gameModel.getGoal());
 
