@@ -16,6 +16,7 @@ public class GameModel {
 	private Integer[] etatSelection;
 	// Liste des regroupements créées par selections
 	private ArrayList<Integer> regroupement;
+	
 
 	/**
 	 * Constructeur par défaut,
@@ -271,5 +272,10 @@ public class GameModel {
 
 		return goal;
 
+	}
+	
+	public int getTime() {
+		
+		return 2;
 	}
 }

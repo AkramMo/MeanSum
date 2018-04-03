@@ -3,6 +3,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
 /**
@@ -26,7 +27,10 @@ public class GameViewController extends JPanel {
 	private JLabel currentSum;
 	// Affiche la somme à obtenir
 	private JLabel goal;
-
+	
+	private JLabel timerLabel;
+	
+	private JMenuBar menuBar;
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
@@ -77,7 +81,7 @@ public class GameViewController extends JPanel {
 						gameModel.changeState(ps1, ps2);
 
 						// Met à jour la somme affiché 
-						showSum();
+						updateSum();
 
 						//rafraichie la fenêtre
 						tilePanel.repaint();
@@ -97,7 +101,8 @@ public class GameViewController extends JPanel {
 
 				/// génère une nouvelle partie et rafraichie la fenêtre.
 				gameModel.generateGame();
-				showSum();
+				
+				updateSum();
 				updateGoal();
 				tilePanel.repaint();
 
@@ -114,7 +119,7 @@ public class GameViewController extends JPanel {
 
 				/// Même partie, mais remet le tout à zéro.
 				gameModel.reinitialisationPartie();
-				showSum();
+				updateSum();
 				updateGoal();
 				tilePanel.repaint();
 
@@ -142,13 +147,15 @@ public class GameViewController extends JPanel {
 		currentSum = new JLabel("Somme : 0");	
 		tilePanel = new TilePanel(gameModel);
 		goal = new JLabel("Objectif : " + gameModel.getGoal());
-
+		timerLabel = new JLabel("Chronomètre : " );
+		
+		
 		// Ajoutes toute composantes au JPanel
 		this.add(tilePanel);
 		this.add(goal);
 		this.add(currentSum);
 		this.add(nextButton);
-		this.add(resetButton);
+		this.add(resetButton);<>
 
 		// Intialise tout mes listeners 
 		setupListeners();
@@ -159,7 +166,7 @@ public class GameViewController extends JPanel {
 	 * pour ajouté la nouvelle somme lors de nouvelle
 	 * sélection de chiffres. 
 	 */
-	private void showSum() {
+	private void updateSum() {
 
 		// Modification du component.
 		currentSum.setText("Somme : " + gameModel.getSum());
@@ -175,6 +182,12 @@ public class GameViewController extends JPanel {
 
 	}
 
+	private void updateTimer()
+	{
+		
+		timerLabel.setText("Chronomètre : ");
+		
+	}
 
 
 
