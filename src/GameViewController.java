@@ -1,11 +1,10 @@
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenuBar;
 import javax.swing.JPanel;
-import javax.swing.JFrame;
 
 /**
  * The view-controller class handles the display (tiles, buttons, etc.)
@@ -32,6 +31,10 @@ public class GameViewController extends JPanel {
 	 * A single tile panel displays all the tiles of the game
 	 */
 	private TilePanel tilePanel;
+	
+	private MonMenuBar menuBar;
+	
+	private JPanel allLabel;
 
 	//  Méthode qui gère tout les listeners
 	private void setupListeners() {		
@@ -144,13 +147,19 @@ public class GameViewController extends JPanel {
 		currentSum = new JLabel("Somme : 0");	
 		tilePanel = new TilePanel(gameModel);
 		goal = new JLabel("Objectif : " + gameModel.getGoal());
+		allLabel = new JPanel();
+		menuBar = new MonMenuBar(this);
+		
 	
 		// Ajoutes toute composantes au JPanel
+		this.add(menuBar);
 		this.add(tilePanel);
-		this.add(goal);
-		this.add(currentSum);
-		this.add(nextButton);
-		this.add(resetButton);
+		allLabel.add(goal);
+		allLabel.add(currentSum);
+		allLabel.add(nextButton);
+		allLabel.add(resetButton);
+		this.add(allLabel);
+		
 
 		// Intialise tout mes listeners 
 		setupListeners();
@@ -175,13 +184,6 @@ public class GameViewController extends JPanel {
 
 		goal.setText("Objectif : " + gameModel.getGoal());
 
-	}
-
-	private void updateTimer()
-	{
-		
-		//timerLabel.setText("Chronomètre : ");
-		
 	}
 
 

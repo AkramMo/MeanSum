@@ -16,7 +16,7 @@ public class GameFrame extends JFrame {
 	 * and the user input (mouse events, button clicks, etc.)
 	 */
 	private GameViewController gameViewController;
-	private MonMenuBar menuBar;
+	
 	/**
 	 * Initialize the main properties of the game window
 	 */
@@ -37,9 +37,8 @@ public class GameFrame extends JFrame {
 		
 		// Initialize the view and set it as the main component our window
 		gameViewController = new GameViewController();
-		menuBar = new MonMenuBar(gameViewController);
 		setContentPane(gameViewController);
-		setJMenuBar(menuBar);
+		
 	}
 	
 	/**

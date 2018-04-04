@@ -71,7 +71,11 @@ public class TilePanel extends JPanel {
 		if(verifyEndGame(etatSelection)) {
 
 			//Vérife si elle est gagnée ou perdu.
-			winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString);
+			if(winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString)) {
+				
+				
+				
+			};
 		}
 	}
 
