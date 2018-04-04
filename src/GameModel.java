@@ -16,7 +16,7 @@ public class GameModel {
 	private Integer[] etatSelection;
 	// Liste des regroupements créées par selections
 	private ArrayList<Integer> regroupement;
-	
+
 
 	/**
 	 * Constructeur par défaut,
@@ -102,7 +102,7 @@ public class GameModel {
 	 * partie précédente si existante.
 	 */
 	public void generateGame() {
- 
+
 		// Nombre aléatoire de regroupement à avoir
 		int nbRegroupements = getRandom(3,6);
 		// Réinitialise les composantes du jeux
@@ -119,7 +119,7 @@ public class GameModel {
 				this.listNumber.add(getRandom(10,99));
 			}
 		}
-		
+
 		System.out.println(getDigits());
 	}
 
@@ -196,35 +196,97 @@ public class GameModel {
 	 */
 	public void changeState(int ps1, int ps2) {
 
-		// Obtient une concaténation de tout les
-		// chiffre affiché.
+		// Tout dépendemment si c'est 1 rectangles ou 2
+		// les procédures sont différentes.
+		if(ps1 == ps2) {
+
+			etatSelection[ps1 - 1] = 1;
+			updateState(etatSelection[ps1 - 1],ps1);
+
+			// Les procédures suivante permmettent de gérer
+			// si la sélection est fait de droite à gauche
+			// et vice-versa
+		}else if(ps1 == ps2 - 1) {
+
+			etatSelection[ps1 - 1] = 2;
+			updateState(etatSelection[ps1 - 1], ps1);
+			etatSelection[ps2 - 1] = 3;
+			updateState(etatSelection[ps2 - 1], ps2);
+
+		}else {
+
+			etatSelection[ps1 - 1] = 3;
+			updateState(etatSelection[ps1 - 1], ps1);
+			etatSelection[ps2 - 1] = 2;
+			updateState(etatSelection[ps2 - 1], ps2);
+		}
+
+		updateRegroupement();
+	}
+
+	private void updateRegroupement() {
+		// TODO Auto-generated method stub
+
+		regroupement.removeAll(regroupement);
 		String allNumbers = getDigits();
+		int compteur = 0;
 
-		//Vérifie que l'état des rectangles à modifié ne l'ont
-		// pas déjà été
-		if(etatSelection[ps1 - 1] == 0 && etatSelection[ps2 - 1] == 0) {
+		while(compteur < etatSelection.length ) {
 
-			// Tout dépendemment si c'est 1 rectangles ou 2
-			// les procédures sont différentes.
-			if(ps1 == ps2) {
+			if(etatSelection[compteur] == 1) {
 
-				etatSelection[ps1 - 1] = 1;
-				regroupement.add(Integer.parseInt(allNumbers.substring(ps1 - 1, ps2)));
+				regroupement.add(Integer.parseInt(allNumbers.substring(compteur, compteur + 1)));
+			}else if(etatSelection[compteur] == 2) {
 
-				// Les procédures suivante permmettent de gérer
-				// si la sélection est fait de droite à gauche
-				// et vice-versa
-			}else if(ps1 == ps2 - 1) {
+				regroupement.add(Integer.parseInt(allNumbers.substring(compteur, compteur + 2)));
 
-				etatSelection[ps1 - 1] = 2;
-				etatSelection[ps2 - 1] = 3;
-				regroupement.add(Integer.parseInt(allNumbers.substring(ps1 - 1, ps2)));
+			}
 
+			compteur++;
+		}
+	}
+
+	private void updateState(Integer state, int ps) {
+		// TODO Auto-generated method stub
+		if(state == 1 ) {
+			if(ps > 1) {
+				if(etatSelection[ps - 2] == 2 ) {
+
+					etatSelection[ps - 2] = 1;
+				}
+			}
+			if(etatSelection[ps] == 3){
+
+				etatSelection[ps] = 1;
+			}
+		}else if(state == 2) {
+			if(ps > 1) {
+				if(etatSelection[ps - 2] == 2) {
+
+					etatSelection[ps - 2] = 1;
+					etatSelection[ps] = 3;
+				}
 			}else {
 
-				etatSelection[ps1 - 1] = 3;
-				etatSelection[ps2 - 1] = 2;
-				regroupement.add(Integer.parseInt(allNumbers.substring(ps2 - 1, ps1)));
+				etatSelection[ps] = 3;
+			}
+		}else if(state == 3) {
+
+			if(etatSelection[ps - 2] != 3) {
+
+				etatSelection[ps - 2] = 2;
+			}else if(etatSelection[ps] == 3){
+
+				etatSelection[ps] = 1;
+			}else {
+
+				etatSelection[ps - 2] = 2;
+				etatSelection[ps - 3] = 1;
+			}
+
+			if(etatSelection[ps ] == 3) {
+
+				etatSelection[ps ] = 1;
 			}
 		}
 	}
@@ -273,9 +335,9 @@ public class GameModel {
 		return goal;
 
 	}
-	
+
 	public int getTime() {
-		
+
 		return 2;
 	}
 }

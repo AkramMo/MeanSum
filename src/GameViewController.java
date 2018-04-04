@@ -5,6 +5,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JFrame;
 
 /**
  * The view-controller class handles the display (tiles, buttons, etc.)
@@ -27,10 +28,6 @@ public class GameViewController extends JPanel {
 	private JLabel currentSum;
 	// Affiche la somme à obtenir
 	private JLabel goal;
-	
-	private JLabel timerLabel;
-	
-	private JMenuBar menuBar;
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
@@ -147,15 +144,13 @@ public class GameViewController extends JPanel {
 		currentSum = new JLabel("Somme : 0");	
 		tilePanel = new TilePanel(gameModel);
 		goal = new JLabel("Objectif : " + gameModel.getGoal());
-		timerLabel = new JLabel("Chronomètre : " );
-		
-		
+	
 		// Ajoutes toute composantes au JPanel
 		this.add(tilePanel);
 		this.add(goal);
 		this.add(currentSum);
 		this.add(nextButton);
-		this.add(resetButton);<>
+		this.add(resetButton);
 
 		// Intialise tout mes listeners 
 		setupListeners();
@@ -185,7 +180,7 @@ public class GameViewController extends JPanel {
 	private void updateTimer()
 	{
 		
-		timerLabel.setText("Chronomètre : ");
+		//timerLabel.setText("Chronomètre : ");
 		
 	}
 
