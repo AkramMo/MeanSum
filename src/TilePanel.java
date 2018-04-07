@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -79,6 +80,11 @@ public class TilePanel extends JPanel {
 		}
 	}
 
+	@Override
+	public Dimension getPreferredSize() {
+		
+		return new Dimension(super.getPreferredSize().width,128);
+	}
 	/**
 	 * Méthode qui si une partie à atteind
 	 * sa fin.
