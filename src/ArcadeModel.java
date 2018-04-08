@@ -8,13 +8,13 @@ public class ArcadeModel extends GameModel {
 		levelGame = 1;
 	}
 	
-	public int getNbrRegroupement(int levelGame){
+	private int getNbrRegroupement(int levelGame){
 		
 		return Math.round((3 + (3*levelGame/20)));
 		
 	}
 	
-	public double getDoubleDigitProba(int levelGame) {
+	private double getDoubleDigitProba(int levelGame) {
 		
 		return (30 + 30*levelGame/200);
 	}
@@ -43,7 +43,23 @@ public class ArcadeModel extends GameModel {
 			}
 		}
 
-		System.out.println(getDigits() + "Mode Arcade");
+		System.out.println(getDigits() + " Mode Arcade");
+	}
+	
+	public void nextLevel(boolean passOrFail) {
+		
+		if(passOrFail) {
+			
+			levelGame++;
+		}else {
+			
+			levelGame = 1;
+		}
+	}
+	
+	public int getLevel() {
+		
+		return levelGame;
 	}
 	
 	

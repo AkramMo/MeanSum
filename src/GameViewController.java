@@ -1,4 +1,4 @@
-import java.awt.FlowLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -22,11 +22,13 @@ public class GameViewController extends JPanel {
 	private GameModel gameModel;
 
 	private ArcadeModel arcadeModel;
+
 	private Timer timer;
 	// Bouton Next 
 	private JButton nextButton;
 	// Bouton Reset de partie
 	private JButton resetButton;
+	private JButton restartButton;
 
 	// Label qui affiche la somme total.
 	private JLabel currentSum;
@@ -35,6 +37,8 @@ public class GameViewController extends JPanel {
 	//Label qui affiche le chronomètre
 	private JLabel labelTime;
 	private JLabel currentReset;
+
+	private JLabel levelLabel;
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
@@ -47,7 +51,7 @@ public class GameViewController extends JPanel {
 
 	private MonMenuBar menuBar;
 
-	private int gameMode;
+	private int gameType;
 	private JPanel allLabel;
 
 
@@ -103,6 +107,7 @@ public class GameViewController extends JPanel {
 					}
 
 				}
+
 			}
 		};
 
@@ -110,7 +115,7 @@ public class GameViewController extends JPanel {
 
 	private void updateSpecification() {
 
-		if(gameMode == 1) {
+		if(gameType == 1) {
 
 			specificTile = tilePanel;
 			specificGame = gameModel;
@@ -143,11 +148,18 @@ public class GameViewController extends JPanel {
 				updateSpecification();
 
 				/// génère une nouvelle partie et rafraichie la fenêtre.
-				specificGame.generateGame();
-				updateReset();
-				updateSum();
-				updateGoal();
-				specificTile.repaint();
+
+				if(specificGame == arcadeModel && specificTile.getEtatPartie() == EtatPartie.GAGNÉE
+						|| specificGame == gameModel ) {
+
+					updateLevel();
+					specificGame.generateGame();
+					specificGame.startTimer();		
+					updateReset();
+					updateSum();
+					updateGoal();
+					specificTile.repaint();
+				}
 
 			}
 
@@ -162,12 +174,11 @@ public class GameViewController extends JPanel {
 
 				updateSpecification();
 
-				if(specificGame == arcadeModel && specificTile.getEtatPartie() != EtatPartie.GAGNÉE
-						|| specificGame == gameModel ) {
+				if( specificTile.getEtatPartie() != EtatPartie.GAGNÉE ) {
 
 					specificGame.reinitialisationPartie();
 
-				}	
+				}
 				updateReset();
 				updateSum();
 				updateGoal();
@@ -182,13 +193,16 @@ public class GameViewController extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				gameMode = 2;
+				levelLabel.setVisible(true);
+				gameType = 2;
 				updateReset();
 				updateSum();
 				updateGoal();
+				updateLevel();
+				gameModel.pauseTimer();
+				arcadeModel.startTimer();
 				tilePanelArcade.setVisible(true);
 				tilePanel.setVisible(false);
-
 
 			}
 
@@ -200,10 +214,12 @@ public class GameViewController extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				gameMode = 1;
+				gameType = 1;
 				updateReset();
 				updateSum();
 				updateGoal();
+				gameModel.startTimer();
+				arcadeModel.pauseTimer();
 				tilePanelArcade.setVisible(false);
 				tilePanel.setVisible(true);
 
@@ -230,10 +246,11 @@ public class GameViewController extends JPanel {
 		tilePanel = new TilePanel(gameModel);
 		arcadeModel = new ArcadeModel();
 		tilePanelArcade = new TilePanel(arcadeModel);
-		gameMode = 1;
+		arcadeModel.pauseTimer();
+		gameType = 1;
 
-		initLabel();
 		initTimer();
+		initLabel();
 
 		// Ajoutes toute composantes au JPanel
 		add(menuBar);
@@ -246,14 +263,45 @@ public class GameViewController extends JPanel {
 		setupListeners();
 	}
 
+	private void initTimer() {
+		// TODO Auto-generated method stub
+		timer = new Timer(1000, new ActionListener() {
+
+
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				if(gameType == 1) {
+
+					labelTime.setText(gameModel.getTimeFormat());
+
+				}else if(gameType == 2) {
+
+					labelTime.setText(arcadeModel.getTimeFormat());
+
+				}
+
+
+			}
+		});
+
+		timer.setDelay(1000);
+		timer.start();
+	}
+
 	private void initLabel() {
 
-		resetButton = new JButton("Réinitialiser");
-		nextButton = new JButton("Suivant");
+		resetButton = new JButton("Reset");
+		nextButton = new JButton("Next");
+		restartButton = new JButton("Restart");
 		currentSum = new JLabel("[Sum] " + gameModel.getSum());	
 		currentReset = new JLabel("[Resets] " + gameModel.getCountReset());
 		goal = new JLabel("[Goal] " + gameModel.getGoal());
 		labelTime = new JLabel("[Time] 00:00");
+		levelLabel = new JLabel("[Level] 1");
+		levelLabel.setVisible(false);
 		allLabel = new JPanel();
 		menuBar = new MonMenuBar(this);
 
@@ -262,42 +310,11 @@ public class GameViewController extends JPanel {
 		allLabel.add(currentSum);
 		allLabel.add(labelTime);
 		allLabel.add(currentReset);
+		allLabel.add(levelLabel);
 		allLabel.add(nextButton);
 		allLabel.add(resetButton);
 
 
-	}
-	private void initTimer() {
-		// TODO Auto-generated method stub
-		timer = new Timer(1000, new ActionListener() {
-
-			int secondTime = 0;
-			int minuteTime = 0;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-
-				secondTime++;
-
-				if(secondTime < 10) {
-
-					labelTime.setText("[Time] 0" + minuteTime + ":0" + secondTime);
-				}else {
-
-					labelTime.setText("[Time] 0" + minuteTime + ":" + secondTime);
-				}
-
-				if(secondTime == 60) {
-
-					secondTime = 0;
-					minuteTime++;
-				}
-			}
-		});
-
-		timer.setDelay(1000);
-		timer.start();
 	}
 
 	/**
@@ -308,11 +325,11 @@ public class GameViewController extends JPanel {
 	private void updateSum() {
 
 		// Modification du component.
-		if(gameMode == 1) {
+		if(gameType == 1) {
 
 			currentSum.setText("[Sum]" + gameModel.getSum());
 
-		}else if(gameMode == 2) {
+		}else if(gameType == 2) {
 
 			currentSum.setText("[Sum]" + arcadeModel.getSum());
 
@@ -327,28 +344,35 @@ public class GameViewController extends JPanel {
 
 
 
-		if(gameMode == 1) {
+		if(gameType == 1) {
 
 			goal.setText("[Goal] " + gameModel.getGoal());
 
-		}else if(gameMode == 2) {
+		}else if(gameType == 2) {
 
 			goal.setText("[Goal] " + arcadeModel.getGoal());
 
 		}
 	}
-	
+
 	private void updateReset() {
-		
-		if(gameMode == 1) {
+
+		if(gameType == 1) {
 
 			currentReset.setText("[Resets] " + gameModel.getCountReset());
 
-		}else if(gameMode == 2) {
+		}else if(gameType == 2) {
 
 			currentReset.setText("[Resets] " + arcadeModel.getCountReset());
 
 		}
+	}
+
+	private void updateLevel() {
+
+		arcadeModel.nextLevel(tilePanelArcade.getEtatPartie() == EtatPartie.GAGNÉE);
+
+		levelLabel.setText("[Level] " + arcadeModel.getLevel());
 	}
 
 

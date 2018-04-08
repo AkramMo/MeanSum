@@ -1,5 +1,9 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.swing.Timer;
 
 
 
@@ -19,8 +23,13 @@ public class GameModel {
 	// Liste des regroupements créées par selections
 	private ArrayList<Integer> regroupement;
 	
+	private Timer timer;
+	
+	private String timeFormat;
+	
 	private int countReset;
 
+	private int[] minuteAndSecond;
 
 	/**
 	 * Constructeur par défaut,
@@ -32,7 +41,9 @@ public class GameModel {
 		etatSelection = new Integer[12];
 		initArray(etatSelection);
 		regroupement = new ArrayList<Integer>();
+		initTimer();
 		countReset = 0;
+		minuteAndSecond = new int[2];
 	}
 	
 
@@ -45,7 +56,7 @@ public class GameModel {
 	 * @return
 	 */
 	public int getRandom(int min, int max) {
-
+		
 		// Vérifie que le min est plus petit que le max
 		if(min >= max) {
 
@@ -126,7 +137,6 @@ public class GameModel {
 			}
 		}
 		
-
 		System.out.println(getDigits());
 	}
 	
@@ -143,7 +153,9 @@ public class GameModel {
 		listNumber.removeAll(listNumber);
 		initArray(etatSelection);
 		regroupement.removeAll(regroupement);
-		countReset = 0;
+		countReset = 0; 
+		resetTimer();
+		
 	}
 
 	/**
@@ -301,6 +313,42 @@ public class GameModel {
 			}
 		}
 	}
+	
+	private void initTimer() {
+		// TODO Auto-generated method stub
+		timer = new Timer(1000, new ActionListener() {
+			
+
+		
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+
+				minuteAndSecond[1]++;
+
+				if(minuteAndSecond[1] < 10) {
+
+					timeFormat = ("[Time] 0" + minuteAndSecond[0] + ":0" + minuteAndSecond[1]);
+				}else {
+
+					timeFormat = ("[Time] 0" + minuteAndSecond[0] + ":" + minuteAndSecond[1]);
+				}
+
+				if(minuteAndSecond[1] == 60) {
+
+					minuteAndSecond[1] = 0;
+					minuteAndSecond[0]++;
+				}
+				
+				
+			}
+		});
+
+		timer.setDelay(1000);
+		timer.start();
+	}
+
 
 	/**
 	 * Fonctions qui retourne la somme 
@@ -347,13 +395,29 @@ public class GameModel {
 
 	}
 
-	public int getTime() {
+	public String getTimeFormat() {
 
-		return 2;
+		return timeFormat;
 	}
 	
 	public int getCountReset() {
 
 		return countReset;
+	}
+	
+	public void pauseTimer() {
+		
+		timer.stop();
+	}
+	
+	public void startTimer() {
+		
+		timer.start();
+	}
+	
+	public void resetTimer() {
+		
+		minuteAndSecond[0] = 0;
+		minuteAndSecond[1] = 0;
 	}
 }

@@ -156,6 +156,7 @@ public class TilePanel extends JPanel {
 		if(winOrFail) {
 			gameState = EtatPartie.GAGNÉE;
 			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, green);
+			gameModelHandle.pauseTimer();
 		}else {
 			gameState = EtatPartie.PERDUE;
 			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, red);
