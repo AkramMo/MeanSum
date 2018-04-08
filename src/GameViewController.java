@@ -1,4 +1,4 @@
-
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,7 +21,7 @@ public class GameViewController extends JPanel {
 	 */
 	private GameModel gameModel;
 
-
+	private ArcadeModel arcadeModel;
 	private Timer timer;
 	// Bouton Next 
 	private JButton nextButton;
@@ -34,31 +34,38 @@ public class GameViewController extends JPanel {
 	private JLabel goal;
 	//Label qui affiche le chronomètre
 	private JLabel labelTime;
+	private JLabel currentReset;
 	/**
 	 * A single tile panel displays all the tiles of the game
 	 */
 	private TilePanel tilePanel;
 
+	private TilePanel tilePanelArcade;
+
+	private TilePanel specificTile; 
+	private GameModel specificGame;
+
 	private MonMenuBar menuBar;
 
+	private int gameMode;
 	private JPanel allLabel;
 
-	//  Méthode qui gère tout les listeners
-	private void setupListeners() {		
 
-		// Ajout de listener au rectangle supérieur de la fenêtre
-		tilePanel.addMouseListener(new MouseAdapter() {
+
+	private MouseAdapter tileMouseAdapter() {
+
+		return new MouseAdapter() {
 
 			// Variable représentant les rectangles sélectionnés
 			int ps1;
 			int ps2;
 
-
 			// Méthode qui est appelé quand il y a un clique de la souris.
 			public void mousePressed(MouseEvent e) {
 
+				updateSpecification();
 				// Identifie quel rectangle a été sélectionné quand la souris est pressée
-				int identifiantRectangle = tilePanel.getRectanglePosition(e.getX(), e.getY());
+				int identifiantRectangle = specificTile.getRectanglePosition(e.getX(), e.getY());
 
 				// Si le rectangle existe il attribut la valeur à la variable ps1 
 				if(identifiantRectangle != -1) {
@@ -72,8 +79,9 @@ public class GameViewController extends JPanel {
 			// Méthode appelé quand la souris est libérée
 			public void mouseReleased(MouseEvent e) {
 
+				updateSpecification();
 				// Identifie quel est le rectangles où la souris a été libéré
-				int identifiantRectangle = tilePanel.getRectanglePosition(e.getX(), e.getY());
+				int identifiantRectangle = specificTile.getRectanglePosition(e.getX(), e.getY());
 
 				// vérifie si le rectangles existes
 				if(identifiantRectangle != -1) {
@@ -82,22 +90,48 @@ public class GameViewController extends JPanel {
 					ps2 = identifiantRectangle;
 
 					// vérifie que la selection est valides
-					if(gameModel.selectionValide(ps1, ps2)){
+					if(specificGame.selectionValide(ps1, ps2)){
 
 						// change l'état de mes cases
-						gameModel.changeState(ps1, ps2);
+						specificGame.changeState(ps1, ps2);
 
 						// Met à jour la somme affiché 
 						updateSum();
 
 						//rafraichie la fenêtre
-						tilePanel.repaint();
+						specificTile.repaint();
 					}
 
 				}
 			}
-		});
+		};
 
+	}
+
+	private void updateSpecification() {
+
+		if(gameMode == 1) {
+
+			specificTile = tilePanel;
+			specificGame = gameModel;
+
+		}else {
+
+			specificTile = tilePanelArcade;
+			specificGame = arcadeModel;
+		}
+	}
+	//  Méthode qui gère tout les listeners
+	private void setupListeners() {		
+
+
+		specificTile = tilePanel;
+		specificGame = gameModel;
+
+		// Ajout de listener au rectangle supérieur de la fenêtre
+		tilePanel.addMouseListener(tileMouseAdapter());
+
+		tilePanelArcade.addMouseListener(tileMouseAdapter());
 
 		// Listener ajouté au bouton next
 		nextButton.addMouseListener(new MouseAdapter() {
@@ -106,12 +140,14 @@ public class GameViewController extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				/// génère une nouvelle partie et rafraichie la fenêtre.
-				gameModel.generateGame();
+				updateSpecification();
 
+				/// génère une nouvelle partie et rafraichie la fenêtre.
+				specificGame.generateGame();
+				updateReset();
 				updateSum();
 				updateGoal();
-				tilePanel.repaint();
+				specificTile.repaint();
 
 			}
 
@@ -124,12 +160,18 @@ public class GameViewController extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				/// Même partie, mais remet le tout à zéro.
-				gameModel.reinitialisationPartie();
+				updateSpecification();
+
+				if(specificGame == arcadeModel && specificTile.getEtatPartie() != EtatPartie.GAGNÉE
+						|| specificGame == gameModel ) {
+
+					specificGame.reinitialisationPartie();
+
+				}	
+				updateReset();
 				updateSum();
 				updateGoal();
-				tilePanel.repaint();
-
+				specificTile.repaint();
 			}
 
 		});
@@ -139,6 +181,31 @@ public class GameViewController extends JPanel {
 			// Quand le bouton suivant est cliqué
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
+				gameMode = 2;
+				updateReset();
+				updateSum();
+				updateGoal();
+				tilePanelArcade.setVisible(true);
+				tilePanel.setVisible(false);
+
+
+			}
+
+		});
+
+		menuBar.getTrainingButton().addMouseListener(new MouseAdapter() {
+
+			// Quand le bouton suivant est cliqué
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				gameMode = 1;
+				updateReset();
+				updateSum();
+				updateGoal();
+				tilePanelArcade.setVisible(false);
+				tilePanel.setVisible(true);
 
 
 			}
@@ -160,39 +227,53 @@ public class GameViewController extends JPanel {
 
 		// Intialisation de tout mes attributs
 		gameModel = new GameModel();
-		resetButton = new JButton("Réinitialiser");
-		nextButton = new JButton("Suivant");
-		currentSum = new JLabel("Somme : 0");	
 		tilePanel = new TilePanel(gameModel);
-		goal = new JLabel("Objectif : " + gameModel.getGoal());
-		initTimer();
-		labelTime = new JLabel("[ Chronomètre ] : 00m 00s ");
-		allLabel = new JPanel();
-		menuBar = new MonMenuBar(this);
+		arcadeModel = new ArcadeModel();
+		tilePanelArcade = new TilePanel(arcadeModel);
+		gameMode = 1;
 
+		initLabel();
+		initTimer();
 
 		// Ajoutes toute composantes au JPanel
-		this.add(menuBar);
-		this.add(tilePanel);
-		allLabel.add(goal);
-		allLabel.add(currentSum);
-		allLabel.add(labelTime);
-		allLabel.add(nextButton);
-		allLabel.add(resetButton);
-		this.add(allLabel);
-
+		add(menuBar);
+		add(tilePanel);
+		add(tilePanelArcade);
+		tilePanelArcade.setVisible(false);
+		add(allLabel);
 
 		// Intialise tout mes listeners 
 		setupListeners();
 	}
 
+	private void initLabel() {
+
+		resetButton = new JButton("Réinitialiser");
+		nextButton = new JButton("Suivant");
+		currentSum = new JLabel("[Sum] " + gameModel.getSum());	
+		currentReset = new JLabel("[Resets] " + gameModel.getCountReset());
+		goal = new JLabel("[Goal] " + gameModel.getGoal());
+		labelTime = new JLabel("[Time] 00:00");
+		allLabel = new JPanel();
+		menuBar = new MonMenuBar(this);
+
+
+		allLabel.add(goal);
+		allLabel.add(currentSum);
+		allLabel.add(labelTime);
+		allLabel.add(currentReset);
+		allLabel.add(nextButton);
+		allLabel.add(resetButton);
+
+
+	}
 	private void initTimer() {
 		// TODO Auto-generated method stub
 		timer = new Timer(1000, new ActionListener() {
 
 			int secondTime = 0;
 			int minuteTime = 0;
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -201,10 +282,10 @@ public class GameViewController extends JPanel {
 
 				if(secondTime < 10) {
 
-					labelTime.setText("[ Chronomètre ] : 0" + minuteTime + "m 0" + secondTime + "s");
+					labelTime.setText("[Time] 0" + minuteTime + ":0" + secondTime);
 				}else {
 
-					labelTime.setText("[ Chronomètre ] : 0" + minuteTime + "m " + secondTime + "s");
+					labelTime.setText("[Time] 0" + minuteTime + ":" + secondTime);
 				}
 
 				if(secondTime == 60) {
@@ -218,6 +299,7 @@ public class GameViewController extends JPanel {
 		timer.setDelay(1000);
 		timer.start();
 	}
+
 	/**
 	 * Méthode qui modifie le component currentSum
 	 * pour ajouté la nouvelle somme lors de nouvelle
@@ -226,7 +308,15 @@ public class GameViewController extends JPanel {
 	private void updateSum() {
 
 		// Modification du component.
-		currentSum.setText("Somme : " + gameModel.getSum());
+		if(gameMode == 1) {
+
+			currentSum.setText("[Sum]" + gameModel.getSum());
+
+		}else if(gameMode == 2) {
+
+			currentSum.setText("[Sum]" + arcadeModel.getSum());
+
+		}
 	}
 
 	/**
@@ -235,8 +325,30 @@ public class GameViewController extends JPanel {
 	 */
 	private void updateGoal() {
 
-		goal.setText("Objectif : " + gameModel.getGoal());
 
+
+		if(gameMode == 1) {
+
+			goal.setText("[Goal] " + gameModel.getGoal());
+
+		}else if(gameMode == 2) {
+
+			goal.setText("[Goal] " + arcadeModel.getGoal());
+
+		}
+	}
+	
+	private void updateReset() {
+		
+		if(gameMode == 1) {
+
+			currentReset.setText("[Resets] " + gameModel.getCountReset());
+
+		}else if(gameMode == 2) {
+
+			currentReset.setText("[Resets] " + arcadeModel.getCountReset());
+
+		}
 	}
 
 

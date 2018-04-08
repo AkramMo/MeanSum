@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+
 /**
  * The tile panel displays all the tiles (one per digit) of the game.
  *
@@ -15,7 +16,9 @@ public class TilePanel extends JPanel {
 	 * request information to display (view) and to modify its state (controller)
 	 */
 	private GameModel gameModelHandle;
+	
 
+	private EtatPartie gameState;
 	/**
 	 * A table of colours that can be used to draw the tiles
 	 */
@@ -70,13 +73,12 @@ public class TilePanel extends JPanel {
 
 		//vérifie si la partie est terminé
 		if(verifyEndGame(etatSelection)) {
-
+			
 			//Vérife si elle est gagnée ou perdu.
-			if(winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString)) {
-				
-				
-				
-			};
+			winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString);
+		}else {
+			
+			gameState = EtatPartie.ENCOURS;
 		}
 	}
 
@@ -85,6 +87,7 @@ public class TilePanel extends JPanel {
 		
 		return new Dimension(super.getPreferredSize().width,128);
 	}
+	
 	/**
 	 * Méthode qui si une partie à atteind
 	 * sa fin.
@@ -151,10 +154,10 @@ public class TilePanel extends JPanel {
 		// si true, dessine rectangle en vert sinon rouge
 		// pour partie perdu.
 		if(winOrFail) {
-
+			gameState = EtatPartie.GAGNÉE;
 			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, green);
 		}else {
-
+			gameState = EtatPartie.PERDUE;
 			drawColorOnRectangle(nbrRectangle, g, stringPosition, nbrString, red);
 		}
 
@@ -351,6 +354,10 @@ public class TilePanel extends JPanel {
 		return caseIdentifiant;
 	}
 
+	public EtatPartie getEtatPartie() {
+		
+		return gameState;
+	}
 	/**
 	 * Constructeur du panel
 	 * @param gameModel model et condition du jeux

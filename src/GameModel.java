@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+
+
 /**
  * The game model handles the logic of the game (generating the numbers, etc.).
  * The instance of the model is used by the view-controller module
@@ -16,6 +18,8 @@ public class GameModel {
 	private Integer[] etatSelection;
 	// Liste des regroupements créées par selections
 	private ArrayList<Integer> regroupement;
+	
+	private int countReset;
 
 
 	/**
@@ -28,7 +32,9 @@ public class GameModel {
 		etatSelection = new Integer[12];
 		initArray(etatSelection);
 		regroupement = new ArrayList<Integer>();
+		countReset = 0;
 	}
+	
 
 	/**
 	 * The methode return a random number
@@ -38,7 +44,7 @@ public class GameModel {
 	 * @param max entié maximum à avoir
 	 * @return
 	 */
-	private int getRandom(int min, int max) {
+	public int getRandom(int min, int max) {
 
 		// Vérifie que le min est plus petit que le max
 		if(min >= max) {
@@ -119,9 +125,12 @@ public class GameModel {
 				this.listNumber.add(getRandom(10,99));
 			}
 		}
+		
 
 		System.out.println(getDigits());
 	}
+	
+	
 
 	/**
 	 * Méthode qui réinitialise tout les éléments
@@ -134,6 +143,7 @@ public class GameModel {
 		listNumber.removeAll(listNumber);
 		initArray(etatSelection);
 		regroupement.removeAll(regroupement);
+		countReset = 0;
 	}
 
 	/**
@@ -145,6 +155,7 @@ public class GameModel {
 		// Réinitialise tout les attributs du jeux
 		initArray(etatSelection);
 		regroupement.removeAll(regroupement);
+		countReset++;
 	}
 
 	/**
@@ -339,5 +350,10 @@ public class GameModel {
 	public int getTime() {
 
 		return 2;
+	}
+	
+	public int getCountReset() {
+
+		return countReset;
 	}
 }
