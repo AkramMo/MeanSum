@@ -4,7 +4,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
-
 /**
  * The tile panel displays all the tiles (one per digit) of the game.
  *
@@ -16,8 +15,8 @@ public class TilePanel extends JPanel {
 	 * request information to display (view) and to modify its state (controller)
 	 */
 	private GameModel gameModelHandle;
-	
 
+	// État de la partie en cours. 
 	private EtatPartie gameState;
 	/**
 	 * A table of colours that can be used to draw the tiles
@@ -73,23 +72,26 @@ public class TilePanel extends JPanel {
 
 		//vérifie si la partie est terminé
 		if(verifyEndGame(etatSelection)) {
-			
+
 			//Vérife si elle est gagnée ou perdu.
 			winOrFail(etatSelection, nbrRectangle, g, stringPosition, nbrString);
 		}else {
-			
+
 			gameState = EtatPartie.ENCOURS;
 		}
 	}
 
-	@Override
+	/**
+	 * Retourne les dimensions pour le TilePanel.
+	 * @return Dimension variable contenant largeur/hauteur
+	 */
 	public Dimension getPreferredSize() {
-		
+
 		return new Dimension(super.getPreferredSize().width,128);
 	}
-	
+
 	/**
-	 * Méthode qui si une partie à atteind
+	 * Méthode qui si une partie est à
 	 * sa fin.
 	 * @param etatSelection tableau d'entier des états.
 	 * @return true ou false selon si la partie est fini ou pas
@@ -131,7 +133,7 @@ public class TilePanel extends JPanel {
 	 * @param g de type Graphics, où sont fait les "dessein"
 	 * @param stringPosition entier qui défini la position des chiffres
 	 * @param nbrString nbr de chiffre à dessiner
-	 * @return
+	 * @return boolean vrai si partie fini, sinon false.
 	 */
 	private boolean winOrFail(Integer[] etatSelection, int nbrRectangle, Graphics g,
 			int stringPosition, String nbrString) {
@@ -355,10 +357,15 @@ public class TilePanel extends JPanel {
 		return caseIdentifiant;
 	}
 
+	/**
+	 * Accesseur
+	 * @return EtatPartie en cours,gagné ou perdu
+	 */
 	public EtatPartie getEtatPartie() {
-		
+
 		return gameState;
 	}
+
 	/**
 	 * Constructeur du panel
 	 * @param gameModel model et condition du jeux

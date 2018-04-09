@@ -5,8 +5,6 @@ import java.util.Random;
 
 import javax.swing.Timer;
 
-
-
 /**
  * The game model handles the logic of the game (generating the numbers, etc.).
  * The instance of the model is used by the view-controller module
@@ -22,13 +20,14 @@ public class GameModel {
 	private Integer[] etatSelection;
 	// Liste des regroupements créées par selections
 	private ArrayList<Integer> regroupement;
-	
+	// Timer pour chronomètrer les parties
 	private Timer timer;
-	
+	// Format de temps affiché au joueur
 	private String timeFormat;
-	
+	// Nombre de reset du joueur
 	private int countReset;
-
+	// Tableau contenent le nb de minute et 
+	// seconde
 	private int[] minuteAndSecond;
 
 	/**
@@ -45,7 +44,7 @@ public class GameModel {
 		countReset = 0;
 		minuteAndSecond = new int[2];
 	}
-	
+
 
 	/**
 	 * The methode return a random number
@@ -56,7 +55,7 @@ public class GameModel {
 	 * @return
 	 */
 	public int getRandom(int min, int max) {
-		
+
 		// Vérifie que le min est plus petit que le max
 		if(min >= max) {
 
@@ -136,11 +135,11 @@ public class GameModel {
 				this.listNumber.add(getRandom(10,99));
 			}
 		}
-		
-		System.out.println(getDigits());
+
+		System.out.println(getDigits() + " Mode Training");
 	}
-	
-	
+
+
 
 	/**
 	 * Méthode qui réinitialise tout les éléments
@@ -155,7 +154,7 @@ public class GameModel {
 		regroupement.removeAll(regroupement);
 		countReset = 0; 
 		resetTimer();
-		
+
 	}
 
 	/**
@@ -247,13 +246,17 @@ public class GameModel {
 		updateRegroupement();
 	}
 
+	/**
+	 * Méthode qui met à jour les regroupement
+	 * selon l'état de sélection des rectangles.
+	 */
 	private void updateRegroupement() {
-		// TODO Auto-generated method stub
 
 		regroupement.removeAll(regroupement);
 		String allNumbers = getDigits();
 		int compteur = 0;
 
+		// Traverse tout le tableau de sélection
 		while(compteur < etatSelection.length ) {
 
 			if(etatSelection[compteur] == 1) {
@@ -269,10 +272,26 @@ public class GameModel {
 		}
 	}
 
+	/**
+	 * Met à jour le tableau d'état de
+	 * sélection des rectangles. 
+	 * @param state état du rectangles
+	 * @param ps position du rectangle
+	 */
 	private void updateState(Integer state, int ps) {
-		// TODO Auto-generated method stub
+
+		/**
+		 * Cette suite de "if" est un algorithme
+		 * qui permet de gérer le tableau d'état de sélection.
+		 * Si un état est changé, il va s'occuper de mettre à jour
+		 * tout ses états voisin pour que l'information reste "lisible".
+		 * Un genre d'opération en chaine, selon le changement d'une case
+		 * du tableau et de ses voisins directe.
+		 */
 		if(state == 1 ) {
+
 			if(ps > 1) {
+
 				if(etatSelection[ps - 2] == 2 ) {
 
 					etatSelection[ps - 2] = 1;
@@ -283,7 +302,9 @@ public class GameModel {
 				etatSelection[ps] = 1;
 			}
 		}else if(state == 2) {
+
 			if(ps > 1) {
+
 				if(etatSelection[ps - 2] == 2) {
 
 					etatSelection[ps - 2] = 1;
@@ -306,24 +327,29 @@ public class GameModel {
 				etatSelection[ps - 2] = 2;
 				etatSelection[ps - 3] = 1;
 			}
-
 			if(etatSelection[ps ] == 3) {
 
 				etatSelection[ps ] = 1;
 			}
 		}
 	}
-	
+
+	/**
+	 * Initie le Timer du jeux selon
+	 * un saut de 1000ms et en instançiant son
+	 * listener.
+	 */
 	private void initTimer() {
-		// TODO Auto-generated method stub
 		timer = new Timer(1000, new ActionListener() {
-			
 
-		
 
+
+			/**
+			 * Listener qui à chaque seconde, met à jour
+			 * le tableau du nb de minute et de seconde.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 
 				minuteAndSecond[1]++;
 
@@ -340,8 +366,8 @@ public class GameModel {
 					minuteAndSecond[1] = 0;
 					minuteAndSecond[0]++;
 				}
-				
-				
+
+
 			}
 		});
 
@@ -395,28 +421,50 @@ public class GameModel {
 
 	}
 
+	/**
+	 * Accesseur
+	 * @return un string avec un format
+	 * de temp.
+	 */
 	public String getTimeFormat() {
 
 		return timeFormat;
 	}
-	
+
+	/**
+	 * Accesseur
+	 * @return retourne un entier
+	 * qui représente le nbr de reset pour
+	 * 1 partie.
+	 */
 	public int getCountReset() {
 
 		return countReset;
 	}
-	
+
+	/**
+	 * méthode qui arrête le timer.
+	 */
 	public void pauseTimer() {
-		
+
 		timer.stop();
 	}
-	
+
+	/**
+	 * Active le timer, si il est arrêté.
+	 */
 	public void startTimer() {
-		
+
 		timer.start();
 	}
-	
+
+	/**
+	 * Méthode qui réinitialise le 
+	 * chronomètre en mettant à 0 le
+	 * tableau minuteAndSecond
+	 */
 	public void resetTimer() {
-		
+
 		minuteAndSecond[0] = 0;
 		minuteAndSecond[1] = 0;
 	}
