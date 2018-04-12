@@ -91,11 +91,15 @@ public class ArcadeModel extends GameModel {
 	 */
 	public void nextLevel(boolean passOrFail) {
 
-		if(passOrFail) {
+		if(passOrFail && levelGame < 20) {
 
 			levelGame++;
 		}else {
 
+			if(levelGame == 20) {
+				
+				System.out.println("Vous avez terminé le jeux !");
+			}
 			levelGame = 1;
 		}
 	}

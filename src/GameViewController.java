@@ -240,6 +240,7 @@ public class GameViewController extends JPanel {
 				// Met à jour les timer de chaque partie.
 				gameModel.pauseTimer();
 				arcadeModel.startTimer();
+				tilePanelArcade.repaint();
 				tilePanelArcade.setVisible(true);
 				tilePanel.setVisible(false);
 
@@ -267,6 +268,7 @@ public class GameViewController extends JPanel {
 				// Met à jour les timer de chaque partie
 				gameModel.startTimer();
 				arcadeModel.pauseTimer();
+				tilePanel.repaint();
 				tilePanelArcade.setVisible(false);
 				tilePanel.setVisible(true);
 
